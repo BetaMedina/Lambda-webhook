@@ -1,0 +1,56 @@
+service: serverless-socket
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: us-west-1
+
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "dynamodb:*"
+      Resource: "*"
+  environment:
+    tableName: ${self:custom.tableName}
+  
+ 
+
+custom:
+  tableName: 'web-socket-serverless'
+
+functions:
+  websocket-connect:
+    handler: ./lambdas/websocket/connect.handler
+    events:
+      - websocket:
+          route: $connect
+  websocket-disconnect:
+    handler: ./lambdas/websocket/disconnect.handler
+    events:
+      - websocket:
+          route: $disconnect
+  websocket-default:
+    handler: ./lambdas/websocket/default.handler
+    events:
+      - websocket:
+          route: $default
+  websocket-message:
+    handler: ./lambdas/websocket/message.handler
+    events:
+      - websocket:
+          route: message
+
+resources:
+ Resources:
+  myDynamoDbTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ${self:custom.tableName}
+      AttributeDefinitions:
+        - AttributeName: ID
+          AttributeType: S
+      KeySchema:
+        - AttributeName: ID
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
