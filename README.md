@@ -1,7 +1,7 @@
 
 <p align="center"><img src="https://avatars3.githubusercontent.com/u/70237074?s=200&v=4"/></p>
 
-# node-lambda
+# websocket - lambda
 
 
 Simple example of a webhook using  [Amazon Lambda](http://aws.amazon.com/lambda/).
